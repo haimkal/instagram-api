@@ -39,46 +39,30 @@ class UsersContoroller {
     }
     
     static me(req, res){
-        try {
-            const payload = jwt.verify(req.body.token, jwtSecret);
-            User.findById(payload._id)
-                .then(user=> {
-                if(!user){
-                    res.sendStatus(401);
-                    return;
-                }
-                res.send({
-                    _id: user._id,
-                    username: user.username,
-                    email: user.email
-                });
-            }).catch(err=> {
-                console.log(err);
-                res.sendStatus(500);
-            });
-        } catch(err){
-            res.sendStatus(401);
-        }
-    }
-
-    static check(req, res) {
-        try{
-            User.findOne({
-                username: req.body.username
-            }).then(user=> {
-                console.log(user);
-                if(user) {
-                    res.send(true)
-                    return;
-                }
-                res.send(false);
-            });
-        }catch(err){
-                res.sendStatus(500);
-            } 
+            res.send(req.user);
         }
     
-}
+
+    static check(req, res) {
+        const {username, email} = req.query;
+        let property = email ? 'email' : 'username';
+        
+        
+        try{
+            User.exists({
+                [property]: req.query[property]
+            })
+               .then(isExist=> {
+                   res.json(isExist);
+               });
+        }
+        catch(err){
+                console.log(err);
+                res.status(400).json(err);
+            } 
+        }
+
+    }
         
 
 
