@@ -12,5 +12,7 @@ routes.post('/user/me', auth, UsersController.me);
 routes.post('/user/check', UsersController.check);
 
 routes.get('/post', auth, PostsContoller.feed);
-routes.put('/post', upload.single('image'),  PostsContoller.create);
+routes.put('/post', auth, upload.single('image'),  PostsContoller.create);
+routes.get('/post/:id', auth, PostsContoller.get);
+
 module.exports = routes;
