@@ -7,8 +7,10 @@ class PostsContoller {
         try {
             const posts = await Post
             .find()
-            .populate('user',['username', 'avatar']);
-            res.send(posts);
+            .populate('user',['username', 'avatar'])
+            .sort({createdAt: req.query.sort || 1});
+
+            res.json(posts);
         } catch(err) {
             console.log(err);
             res.sendStatus(500);
@@ -57,6 +59,30 @@ class PostsContoller {
             console.log(error);
             res.sendStatus(500);
             }
+    }
+
+    static async like (req, res) {
+        try {
+            const { id } = req.params;
+            const post=  await Post.findByIdAndUpdate(id, { $addToSet: { likes: req.user._id }}, {new: true});
+            res.status(200).send(post);
+            // console.log(id, post);
+        } catch(err) {
+            res.sendStatus(500);
+        }
+
+
+    }
+
+    static async unlike (req, res){
+        try{
+            const {id} = req.params;
+            const post= await Post.findByIdAndUpdate(id, { $pull: { likes: req.user._id }}, {new: true});
+            res.status(200).send(post);
+        } catch(err) {
+            res.sendStatus(500);
+        }
+
     }
 }
 

@@ -7,6 +7,8 @@ const Post = mongoose.model ('Post', {
         ref: 'User'
 	},
 
+
+
 	description: {
 		type: String
 	},
@@ -15,6 +17,8 @@ const Post = mongoose.model ('Post', {
         type: String,
         required: true
     },
+	
+	likes: [mongoose.ObjectId], 
 
 	createdAt: {
 		type: Date,
