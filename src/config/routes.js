@@ -6,6 +6,8 @@ const auth = require ('../middlewares/auth');
 const routes = express.Router();
 const upload = multer({dest: 'public/posts'});
 
+
+
 routes.put('/user', UsersController.create);
 routes.post('/user/login', UsersController.login);
 routes.post('/user/me', auth, UsersController.me);
@@ -21,4 +23,10 @@ routes.get('/post', PostsContoller.feed);
 routes.put('/post', auth, upload.single('image'),  PostsContoller.create);
 routes.get('/post/:id', auth, PostsContoller.get);
 
+routes.put('/post/:id/comment', auth, PostsContoller.createComment);
+routes.get('/post/:id/comment', auth, PostsContoller.getComments);
+
+routes.post('/user/:id/follow', auth, UsersController.follow);
+
+routes.get('/', (req, res)=> res.send());
 module.exports = routes;
